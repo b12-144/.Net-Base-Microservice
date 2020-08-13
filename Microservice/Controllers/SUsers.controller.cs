@@ -17,6 +17,7 @@ namespace Microservice.Controllers {
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/users")]
     [AllowAnonymous]//todo remove this in production
+    [OpenApiTag("Users")]
     public class UsersController: ControllerBase {
 
         #region Fields
@@ -31,8 +32,9 @@ namespace Microservice.Controllers {
 
         #region GetAll
         [HttpGet()]
-        [OpenApiOperation("getAll", "Returns all users", "Returns all users")]
+        [OpenApiOperation("getAllUsers", "Returns all users", "Returns all users")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<EUser>> GetAll(int listCount = -1, int pageNumber = 0, string orderBy="id desc") {
             try {
                 return Ok(service.GetAll(listCount, pageNumber, orderBy));
@@ -45,12 +47,15 @@ namespace Microservice.Controllers {
 
         #region GetByID
         [HttpGet("{id}")]
-        [OpenApiOperation("getByID")]
+        [OpenApiOperation("getUserByID")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetByID(Int64 id) {
             try {
-                var bill = service.GetByID(id);
-                return Ok(bill);
+                var response = service.GetByID(id);
+                if (response == null) return NotFound();
+                return Ok(response);
             } catch (Exception ex) {
                 SLogger.LogError(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -60,7 +65,7 @@ namespace Microservice.Controllers {
 
         #region Save
         [HttpPut("save")]
-        [OpenApiOperation("save")]
+        [OpenApiOperation("saveUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]  
         public async Task<IActionResult> Save([FromBody] EUser eUser) {
@@ -76,7 +81,7 @@ namespace Microservice.Controllers {
 
         #region Insert
         [HttpPost]
-        [OpenApiOperation("insert")]
+        [OpenApiOperation("insertUser")]
         [ProducesResponseType(StatusCodes.Status201Created)]    
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  
         public async Task<IActionResult> Insert([FromBody] EUser eUser) {
@@ -92,12 +97,14 @@ namespace Microservice.Controllers {
 
         #region Update
         [HttpPut]
-        [OpenApiOperation("update")]
+        [OpenApiOperation("updateUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]        
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update([FromBody] EUser eUser) {
             try {
                 var result = await service.UpdateAsync(eUser);
+                if (result == -1) return NotFound();
                 return Ok(result);
             } catch (Exception ex) {
                 SLogger.LogError(ex);
@@ -108,12 +115,14 @@ namespace Microservice.Controllers {
 
         #region Remove
         [HttpDelete("remove/{id}")]
-        [OpenApiOperation("remove")]
+        [OpenApiOperation("removeUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Remove(Int64 id) {
             try {
                 var result = await service.RemoveAsync(id);
+                if (result == false) return NotFound();
                 return Ok(result);
             } catch (Exception ex) {
                 SLogger.LogError(ex);

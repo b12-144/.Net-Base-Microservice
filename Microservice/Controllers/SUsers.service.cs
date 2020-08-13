@@ -15,9 +15,8 @@ namespace Microservice.Services {
         public List<EUser> GetAll(int listCount = -1, int pageNumber = 0, string orderBy="id asc") {
             List<EUser> list = null;
             using var context = new SMySQLContext();
-            if (listCount == -1) list = context.Users.ToList();
-            else list = context.Users.OrderBy(orderBy).Skip(pageNumber * listCount).Take(listCount).ToList();
-            return list;
+            if (listCount == -1) return context.Users.OrderBy(orderBy).ToList();
+            return context.Users.OrderBy(orderBy).Skip(pageNumber * listCount).Take(listCount).ToList();            
         }
         #endregion
 
@@ -58,6 +57,7 @@ namespace Microservice.Services {
         #region UpdateAsync
         public async Task<Int64> UpdateAsync(EUser eUser) {
             await using var context = new SMySQLContext();
+            if (context.Clients.SingleOrDefault(x => x.id == eUser.id) == null) return -1;
             var e = context.Users.Update(eUser);
             await context.SaveChangesAsync();
             return e.Entity.id;
