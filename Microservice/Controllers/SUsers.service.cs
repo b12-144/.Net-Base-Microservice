@@ -13,11 +13,20 @@ namespace Microservice.Services {
 
         #region GetAll
         public List<EUser> GetAll(int listCount = -1, int pageNumber = 0, string orderBy="id asc") {
-            List<EUser> list = null;
             using var context = new SMySQLContext();
             if (listCount == -1) return context.Users.OrderBy(orderBy).ToList();
             return context.Users.OrderBy(orderBy).Skip(pageNumber * listCount).Take(listCount).ToList();            
         }
+        #endregion
+
+        #region GetAllWithLinq
+        public List<EUser> GetAllUsingLinq(int listCount = -1, int pageNumber = 0, string orderBy = "id asc") {
+            using var context = new SMySQLContext();
+            if (listCount == -1) return context.Users.OrderBy(orderBy).ToList();
+            var list = (from eUser in context.Users
+                    select eUser).OrderBy(orderBy).Skip(pageNumber * listCount).Take(listCount).ToList();
+            return list;
+        } 
         #endregion
 
         #region GetByID
@@ -25,6 +34,16 @@ namespace Microservice.Services {
             using var context = new SMySQLContext();
             var e = context.Users.SingleOrDefault(x => x.id == id);
             return e;
+        }
+        #endregion
+
+        #region GetByIDUsingLinq
+        public EUser GetByIDUsingLinq(Int64 id) {
+            using var context = new SMySQLContext();
+            EUser user = (from EUser u in context.Users
+                          where u.id == id
+                          select u).Single();
+            return user;
         }
         #endregion
 
