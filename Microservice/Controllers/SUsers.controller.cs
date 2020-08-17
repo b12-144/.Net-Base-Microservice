@@ -51,7 +51,7 @@ namespace Microservice.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetByID(Int64 id) {
+        public ActionResult<EUser> GetByID(Int64 id) {
             try {
                 var response = service.GetByID(id);
                 if (response == null) return NotFound();
@@ -68,7 +68,7 @@ namespace Microservice.Controllers {
         [OpenApiOperation("saveUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]  
-        public async Task<IActionResult> Save([FromBody] EUser eUser) {
+        public async Task<ActionResult<Int64>> Save([FromBody] EUser eUser) {
             try {
                 var result = await service.SaveAsync(eUser);
                 return Ok(result);
@@ -84,7 +84,7 @@ namespace Microservice.Controllers {
         [OpenApiOperation("insertUser")]
         [ProducesResponseType(StatusCodes.Status201Created)]    
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  
-        public async Task<IActionResult> Insert([FromBody] EUser eUser) {
+        public async Task<ActionResult<Int64>> Insert([FromBody] EUser eUser) {
             try {
                 var result = await service.InsertAsync(eUser);
                 return StatusCode(StatusCodes.Status201Created, result);
@@ -101,10 +101,10 @@ namespace Microservice.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]        
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] EUser eUser) {
+        public async Task<ActionResult<bool>> Update([FromBody] EUser eUser) {
             try {
                 var result = await service.UpdateAsync(eUser);
-                if (result == -1) return NotFound();
+                if (result == false) return NotFound();
                 return Ok(result);
             } catch (Exception ex) {
                 SLogger.LogError(ex);
@@ -119,7 +119,7 @@ namespace Microservice.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Remove(Int64 id) {
+        public async Task<ActionResult<bool>> Remove(Int64 id) {
             try {
                 var result = await service.RemoveAsync(id);
                 if (result == false) return NotFound();
