@@ -57,7 +57,7 @@ namespace Microservice.Services {
         #region UpdateAsync
         public async Task<Int64> UpdateAsync(EUser eUser) {
             await using var context = new SMySQLContext();
-            if (context.Clients.SingleOrDefault(x => x.id == eUser.id) == null) return -1;
+            if (context.Users.SingleOrDefault(x => x.id == eUser.id) == null) return -1;
             var e = context.Users.Update(eUser);
             await context.SaveChangesAsync();
             return e.Entity.id;

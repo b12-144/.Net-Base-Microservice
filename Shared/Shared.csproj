@@ -8,6 +8,7 @@
       <PackageReference Include="Flurl.Http" Version="2.4.2" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="3.2.1" />

@@ -52,7 +52,7 @@ namespace Shared.Codes {
             services.AddResponseCompression();
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             SetupApiVersioning(services,1,0);
-            services.AddControllers();//o padrao só tem isso            
+            services.AddControllers().AddNewtonsoftJson();//System.Text.Json had some issues serializing/deserializing numbers. I'm falling back to newtonsoft for a while. 
         }
         #endregion 
 
