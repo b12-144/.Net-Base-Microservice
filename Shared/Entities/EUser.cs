@@ -17,5 +17,9 @@ namespace Shared.Entities {
         public string postalCode { get; set; }
         public string city { get; set; }
         public string state { get; set; }
+        [Required]
+        public DateTime creationDateUTC { get; set; }
+        [Required]
+        public DateTime modificationDateUTC { get; set; }
     }
 }

@@ -49,10 +49,10 @@ namespace Microservice.Services {
 
         #region SaveAsync
         public async Task<Int64> SaveAsync(EUser eUser) {
-            //eUser.ModificationDateUTC = DateTime.UtcNow;
+            eUser.modificationDateUTC = DateTime.UtcNow;
             await using var context = new SMySQLContext();
             if (eUser.id < 1) {
-                //eUser.CreationDateUTC = eUser.ModificationDateUTC = DateTime.UtcNow;
+                eUser.creationDateUTC = eUser.modificationDateUTC = DateTime.UtcNow;
                 var e = await context.Users.AddAsync(eUser);
                 await context.SaveChangesAsync();
                 return e.Entity.id;
