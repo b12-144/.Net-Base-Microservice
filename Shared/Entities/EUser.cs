@@ -10,9 +10,12 @@ namespace Shared.Entities {
     public class EUser {
         [Key]
         public Int64 id { get; set; }
-        public int pocId { get; set; }
         [Required][StringLength(200)]
         public string name { get; set; }
-        public string avatarUrl { get; set; }
+        public string phone { get; set; }
+        public string mobile { get; set; }
+        public string postalCode { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
     }
 }

@@ -130,5 +130,37 @@ namespace Microservice.Controllers {
             }
         }
         #endregion
+
+        #region Search
+        [HttpPost("search/{txt}")]
+        [OpenApiOperation("searchUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<IEnumerable<EUser>> Search(string txt) {
+            try {
+                var list = service.Search(txt);
+                return Ok(list);
+            } catch (Exception ex) {
+                SLogger.LogError(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        #endregion
+
+        #region Search
+        [HttpPost("advanced-search")]
+        [OpenApiOperation("advancedSearchUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<IEnumerable<EUser>> AdvancedSearch([FromBody] EUserAdvancedSearchRequest e) {
+            try {
+                var list = service.AdvancedSearch(e);
+                return Ok(list);
+            } catch (Exception ex) {
+                SLogger.LogError(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        #endregion
     }
 }

@@ -93,5 +93,31 @@ namespace Microservice.Services {
             return true;
         }
         #endregion
+
+        #region Search
+        public List<EUser> Search(string txt) {
+            using var context = new SMySQLContext();
+            var list = context.Users.Where(t =>
+                  t.name.Contains(txt) ||                  
+                  t.phone.Contains(txt) ||
+                  t.mobile.Contains(txt)).ToList();
+            return list;
+        }
+        #endregion
+
+        #region AdvancedSearch
+        public List<EUser> AdvancedSearch(EUserAdvancedSearchRequest eSearch) {
+            using var context = new SMySQLContext();
+            var ignoreCase = StringComparison.CurrentCultureIgnoreCase;
+            var list = context.Users
+                 .Where(tr => String.IsNullOrEmpty(eSearch.name) || tr.name.Contains(eSearch.name, ignoreCase))
+                 .Where(tr => String.IsNullOrEmpty(eSearch.mobile) || tr.mobile.Contains(eSearch.mobile, ignoreCase))
+                 .Where(tr => String.IsNullOrEmpty(eSearch.postalCode) || tr.postalCode.Contains(eSearch.postalCode, ignoreCase))
+                 .Where(tr => String.IsNullOrEmpty(eSearch.city) || tr.city.Contains(eSearch.city, ignoreCase))
+                 .Where(tr => String.IsNullOrEmpty(eSearch.state) || tr.state.Contains(eSearch.state, ignoreCase))
+                 .ToList();
+            return list;
+        }
+        #endregion
     }
 }
