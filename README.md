@@ -1,4 +1,4 @@
-# .Net Core Microservice Base Template
+# .Net Base Microservice Template
 This solution was created to provide a template for microservices created in .Net Core. It's composed by a Shared project and a sample Microservice project. It provides a sample controller and service and uses the following features:
 
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
